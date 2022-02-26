@@ -4,6 +4,8 @@
 import tkinter as tk
 import time
 import os
+import locale
+locale.setlocale(locale.LC_CTYPE, 'chinese')
 
 from pyparsing import col, null_debug_action
 
