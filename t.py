@@ -3,6 +3,7 @@
  
 import tkinter as tk
 import time
+import os
 
 from pyparsing import col, null_debug_action
 
@@ -33,10 +34,11 @@ def init():
     global current_datatime
     global level_list
     global current_level
+    cwd = os.getcwd()
     #初始化当前时间
     current_datatime = time.time()
-    f1 = open("resourse\\current.txt","r",encoding="utf-8")
-    f2 = open("resourse\\level.txt","r",encoding="utf-8")
+    f1 = open(cwd+"\\resourse\\current.txt","r",encoding="utf-8")
+    f2 = open(cwd+"\\resourse\\level.txt","r",encoding="utf-8")
     #初始化上次dao时间
     last_go_datetime = int(f1.readline().split('.')[0])
     #初始化level等级列表
