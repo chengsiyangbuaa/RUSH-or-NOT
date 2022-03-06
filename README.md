@@ -4,8 +4,66 @@ A small project that record you RUSH or NOT
 
 ## LEVEL of RUSHER
 
-![image-20220226215126950](http://tallestdaisy.oss-cn-beijing.aliyuncs.com/img/image-20220226215126950.png)
+![image-20220227235427258](http://tallestdaisy.oss-cn-beijing.aliyuncs.com/img/image-20220227235427258.png)
 
 ## DEMO DISPLAY
 
-![image-20220226215230722](http://tallestdaisy.oss-cn-beijing.aliyuncs.com/img/image-20220226215230722.png)
+![image-20220227235413376](http://tallestdaisy.oss-cn-beijing.aliyuncs.com/img/image-20220227235413376.png)
+
+## 需求分析
+
+- 能够保存个人的**rush记录**
+  - 存储个人历史rush记录
+    - 定义第i个rush的生命周期为从第i次rush开始到第i+1次结束
+    - 存储每一个已经结束的rush
+    - 每一个rush的信息包括
+      - rush编号
+      - rush开始时间
+      - rush结束时间
+      - 本次持续时间
+      - 等级
+- 能够显示**个人的rush信息**
+  - 界面展示rush信息
+    - 当前时间
+    - 上次rush时间
+    - 本次持续时间
+    - 下一等级时间
+    - 当前等级
+    - 下个等级
+    - 历史最长持续时间
+    - 历史最高等级
+- 能够通过**GUI交互**，记录rush
+  - 点击rush按钮代表rush
+    - 点击rush按钮，更新历史记录，也更新界面显示信息
+
+## 系统设计
+
+将系统分为以下模块（目前阶段不考虑系统架构，仅仅考虑功能模块）：
+
+- 文件存储模块
+  - 对文件的所有操作，抽象成方法，根据此模块提供的方法对文件进行操作
+  - 每一种操作都抽象成一个方法
+    - 读出current.txt存储的上次坠机时间？**冗余**
+    - 修改current.txt的上次坠机时间？**冗余**
+    - 读出history.txt中的所有历史坠机记录
+    - 读出history.txt中的上次历史坠机记录
+    - 读出history.txt中的上次历史坠机**时间**
+    - 增加history.txt内容，在尾部增加一条坠机记录
+- 界面展示模块
+  - 界面中所有显示的元素抽象成方法，main使用此模块的方法产生各种界面。
+  - 每一个界面显示元素都抽象成一个方法
+    - 上次坠机百京时间，标题+动态数据
+    - 道友当前百京时间，标题+动态数据
+    - 道友当前等级，标题+动态数据
+    - 道友下一割等级，标题+动态数据
+    - 美甲的窃魂卷持续时长，标题+动态数据
+    - 突破倒计时，标题+动态数据
+- 人机交互模块
+  - 人机交互的操作都抽象成方法，人机交互的时候触发此模块的方法。
+  - 每一个人机交互事件，都抽象成一个方法。
+    - 坠机
+      - 修改数据，记录当前信息，写入到历史坠机记录中
+      - 界面显示，将界面显示的动态元素更新。
+
+
+

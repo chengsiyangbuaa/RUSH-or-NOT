@@ -1,10 +1,12 @@
 
 # 方法一：利用configure()或config()方法实现文本变化
  
+from glob import glob
 import tkinter as tk
 import time
 import os
 import locale
+from matplotlib.pyplot import text
 locale.setlocale(locale.LC_CTYPE, 'chinese')
 
 from pyparsing import col, null_debug_action
@@ -87,42 +89,31 @@ def init():
 # b=tk.Button(root,text='点我',width=10,height=2,command=hit_me)#点击按钮执行一个名为“hit_me”的函数
 # b.grid(row=0,column=2,pady=2)
 
-# time.strftime("%d天%H小时%M分%S秒",time.localtime(45862347.9700077))  
-# '16天03小时32分27秒'
-# a = "Sat Mar 28 22:24:24 2016"
-# print time.mktime(time.strptime(a,"%a %b %d %H:%M:%S %Y"))
-# 1459175064.0
-# 一天=86400
-
-# # 上次dao的时间
-# last_go_datetime = -1
-# # 当前时间
-# current_datatime = -1
-# # 本次修炼时间
-# this_practise_time = -1
-# # 到下一个等级剩余时间
-# to_next_level_time = -1
-# # 当前等级
-# current_level = ""
-# # 下一个等级
-# next_level = ""
-# # 历史dao记录
-# history_datetime_list = []
-# # 所有等级列表
-# level_list = []
 def gettime():
     global current_datatime
     global this_practise_time
     global to_next_level_time
+    global current_level
+    
+    #更新实时数据
     current_datatime = time.time()
     this_practise_time = current_datatime - last_go_datetime
+    to_next_level_time = level_list[current_level+1][1]*86400 - this_practise_time
+
+    #升级
+    if to_next_level_time <=0:
+        current_level += 1
+        #更新界面显示
+        current_level_timestr = f"Level {current_level} {level_list[current_level][0]} 嘻嘻"
+        current_level_lb.configure(text=current_level_timestr)
+        # = tk.Label(root, text=current_level_timestr, fg='red', font=("黑体", 12),width=35,height=2)
+        next_level_timestr = f"Level {current_level+1} {level_list[current_level+1][0]} 嘻嘻嘻"
+        next_level_lb.configure(text=next_level_timestr)
+
     # 获取时间并转为字符串
     current_datatime_timestr = time.strftime("%Y年-%m月-%d号 %H小时%M分%S秒",time.localtime(current_datatime))  
-    this_practise_timestr = f"{int((current_datatime - last_go_datetime)/86400)}天"+time.strftime("%H小时%M分%S秒",time.gmtime(current_datatime - last_go_datetime))
-    # to_next_level_timestr = f"{int(level_list[current_level+1][1]*86400 - last_go_datetime)/86400}天"+time.strftime("%H小时%M分%S秒",time.gmtime(level_list[current_level+1][1]*86400 - last_go_datetime))
-    # print(level_list[current_level+1][1]*86400)
-    # print(this_practise_time)
-    to_next_level_timestr = f"{int((level_list[current_level+1][1]*86400 - this_practise_time)/86400)}天"+time.strftime("%H小时%M分%S秒",time.gmtime((level_list[current_level+1][1]*86400 - this_practise_time)%86400))
+    this_practise_timestr = f"{int((this_practise_time)/86400)}天"+time.strftime("%H小时%M分%S秒",time.gmtime(this_practise_time))
+    to_next_level_timestr = f"{int(to_next_level_time/86400)}天"+time.strftime("%H小时%M分%S秒",time.gmtime(to_next_level_time%86400))
     # 重新设置标签文本
     current_datatime_lb.configure(text=current_datatime_timestr)
     this_practise_time_lb.configure(text=this_practise_timestr)
@@ -156,11 +147,11 @@ current_level_lb = tk.Label(root, text=current_level_timestr, fg='red', font=("�
 current_level_lb.grid(row=3,column=2)
 
 #道友下一割等级
-current_level_text_lb = tk.Label(root, text='道友下一割等级',anchor="e", fg='red', font=("黑体", 12),width=20,height=2)
-current_level_text_lb.grid(row=4,column=1)
-current_level_timestr = f"Level {current_level+1} {level_list[current_level+1][0]} 嘻嘻嘻"
-current_level_lb = tk.Label(root, text=current_level_timestr, fg='red', font=("黑体", 12),width=35,height=2)
-current_level_lb.grid(row=4,column=2)
+next_level_text_lb = tk.Label(root, text='道友下一割等级',anchor="e", fg='red', font=("黑体", 12),width=20,height=2)
+next_level_text_lb.grid(row=4,column=1)
+next_level_timestr = f"Level {current_level+1} {level_list[current_level+1][0]} 嘻嘻嘻"
+next_level_lb = tk.Label(root, text=next_level_timestr, fg='red', font=("黑体", 12),width=35,height=2)
+next_level_lb.grid(row=4,column=2)
 
 #美甲的窃魂卷持续时长
 this_practise_time_text_lb = tk.Label(root, text='美甲的窃魂卷持续时长',anchor="e", fg='red', font=("黑体", 12),width=20,height=2)
